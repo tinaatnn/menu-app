@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>สมุดเมนูของฉัน</title>
+<meta name="theme-color" content="#1F4D3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="เมนูของฉัน">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F8F3; --surface:#FFFFFF; --ink:#18261F; --muted:#5E6B63; --line:#DCE3DA;
+  --basil:#1F4D3A; --leaf:#A7C957; --chili:#D1495B; --chili-ink:#fff; --chip:#EAF1E4;
+  --shadow:0 2px 10px rgba(31,77,58,.08);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101814; --surface:#18231D; --ink:#E8EFE9; --muted:#9DAAA2; --line:#2A3830;
+    --basil:#8CC7A5; --leaf:#A7C957; --chili:#E86A7A; --chili-ink:#1a0d10; --chip:#223128;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101814; --surface:#18231D; --ink:#E8EFE9; --muted:#9DAAA2; --line:#2A3830;
+  --basil:#8CC7A5; --leaf:#A7C957; --chili:#E86A7A; --chili-ink:#1a0d10; --chip:#223128;
+  --shadow:none;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Sarabun","Noto Sans Thai",system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-tap-highlight-color:transparent}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 96px}
+h1,h2,h3{font-family:"Mitr","Sarabun",sans-serif;font-weight:500;margin:0;line-height:1.3}
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:8px 0 16px}
+header.top h1{font-size:28px;color:var(--basil)}
+header.top p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.icon-btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;font-size:14px}
+
+/* Random picker — the one bold element */
+.spin{background:var(--chili);color:var(--chili-ink);border-radius:24px;padding:20px;margin-bottom:20px;position:relative;overflow:hidden}
+.spin .label{font-size:14px;opacity:.85}
+.spin .pick{font-family:"Mitr",sans-serif;font-size:30px;font-weight:500;line-height:1.25;margin:6px 0 14px;min-height:38px;word-break:break-word}
+.spin .pick.rolling{animation:flick .08s steps(1) infinite}
+@keyframes flick{50%{opacity:.55}}
+.spin .row{display:flex;gap:8px;flex-wrap:wrap}
+.spin button{border:0;border-radius:999px;padding:10px 18px;font-weight:600;background:var(--chili-ink);color:var(--chili)}
+.spin button.ghost{background:transparent;color:var(--chili-ink);border:1.5px solid currentColor}
+.spin .plate{position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;border:14px solid rgba(255,255,255,.15);pointer-events:none}
+
+.search{display:flex;gap:8px;margin-bottom:10px}
+.search input{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 14px;min-width:0}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid transparent;background:var(--chip);border-radius:999px;padding:6px 14px;font-size:14px;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--basil);color:var(--bg)}
+.count{color:var(--muted);font-size:13px;margin:0 0 8px}
+
+.list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);width:100%;text-align:left}
+.item .dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--leaf)}
+.item .t{flex:1;min-width:0}
+.item .n{font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .c{color:var(--muted);font-size:13px}
+.item .has{font-size:12px;color:var(--basil);flex:none}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.empty h2{color:var(--ink);font-size:20px;margin-bottom:6px}
+
+.fab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--basil);color:var(--bg);border:0;border-radius:18px;padding:14px 20px;font-family:"Mitr",sans-serif;font-size:16px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+
+/* Sheets */
+dialog{border:0;padding:0;margin:auto auto 0;width:100%;max-width:640px;max-height:92vh;border-radius:24px 24px 0 0;background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,15,.45)}
+dialog[open]{animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@media (prefers-reduced-motion: reduce){dialog[open],.spin .pick.rolling{animation:none}}
+.sheet{padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px));overflow-y:auto;max-height:92vh}
+.sheet h2{font-size:22px;margin-bottom:4px}
+.sheet .sub{color:var(--muted);font-size:14px;margin:0 0 16px}
+.sheet h3{font-size:16px;margin:18px 0 6px;color:var(--basil)}
+.sheet .body{white-space:pre-wrap;margin:0}
+.actions{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 16px;font-weight:600}
+.btn.primary{background:var(--basil);color:var(--bg);border-color:var(--basil)}
+.btn.danger{color:var(--chili);border-color:var(--chili);margin-left:auto}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 4px}
+.field{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 12px}
+textarea.field{min-height:96px;resize:vertical}
+.hint{color:var(--muted);font-size:13px;margin:4px 0 0}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.status{font-size:12px;color:var(--muted);text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>สมุดเมนูของฉัน</h1>
+      <p>เก็บเมนูโปรด ค้นหา และสุ่มว่าวันนี้กินอะไร</p>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+      <button class="icon-btn" id="importBtn">วางหลายเมนู</button>
+      <button class="icon-btn" id="settingsBtn" aria-label="ตั้งค่าการเชื่อมต่อ">ตั้งค่า</button>
+    </div>
+  </header>
+
+  <section class="spin" aria-live="polite">
+    <div class="plate"></div>
+    <div class="label" id="spinLabel">วันนี้กินอะไรดี</div>
+    <div class="pick" id="pick">กดสุ่มได้เลย</div>
+    <div class="row">
+      <button id="spinBtn">สุ่มเมนู</button>
+      <button class="ghost" id="openPick" hidden>ดูเมนูนี้</button>
+    </div>
+  </section>
+
+  <div class="search">
+    <input id="q" type="search" placeholder="ค้นหาชื่อเมนูหรือวัตถุดิบ" aria-label="ค้นหาเมนู">
+  </div>
+  <div class="chips" id="chips" role="group" aria-label="หมวดหมู่"></div>
+  <p class="count" id="count"></p>
+  <ul class="list" id="list"></ul>
+  <div class="empty" id="empty" hidden>
+    <h2>ยังไม่มีเมนู</h2>
+    <p>เชื่อมต่อ Google Sheet ในหน้า "ตั้งค่า" แล้วเมนูของคุณจะขึ้นที่นี่</p>
+  </div>
+  <p class="status"><span id="status">กำลังโหลด…</span> <button class="icon-btn" id="refreshBtn" style="margin-left:6px;padding:4px 10px;font-size:12px">โหลดใหม่</button></p>
+</div>
+
+<button class="fab" id="addBtn">+ เพิ่มเมนู</button>
+<div class="toast" id="toast" role="status"></div>
+
+<!-- Detail -->
+<dialog id="detail"><div class="sheet" id="detailBody"></div></dialog>
+
+<!-- Edit form -->
+<dialog id="editor">
+  <form class="sheet" id="form" method="dialog">
+    <h2 id="formTitle">เพิ่มเมนู</h2>
+    <label for="f-name">ชื่อเมนู</label>
+    <input class="field" id="f-name" required maxlength="120" placeholder="เช่น กะเพราหมูสับ">
+    <label for="f-cat">หมวดหมู่</label>
+    <input class="field" id="f-cat" list="catList" maxlength="40" placeholder="เช่น ผัด, แกง, ของหวาน">
+    <datalist id="catList"></datalist>
+    <label for="f-ing">วัตถุดิบ</label>
+    <textarea class="field" id="f-ing" placeholder="บรรทัดละ 1 อย่าง"></textarea>
+    <label for="f-steps">วิธีทำ</label>
+    <textarea class="field" id="f-steps" placeholder="บรรทัดละ 1 ขั้นตอน"></textarea>
+    <label for="f-note">โน้ต</label>
+    <input class="field" id="f-note" maxlength="300" placeholder="เช่น ร้านที่อร่อย, ปรับรสยังไง">
+    <div class="actions">
+      <button type="submit" class="btn primary" id="saveBtn">บันทึกเมนู</button>
+      <button type="button" class="btn" id="cancelEdit">ยกเลิก</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Bulk import -->
+<dialog id="importer">
+  <form class="sheet" id="importForm" method="dialog">
+    <h2>วางหลายเมนู</h2>
+    <p class="sub">วางรายชื่อเมนู บรรทัดละ 1 เมนู ใส่หมวดได้ด้วยการพิมพ์ "ชื่อเมนู | หมวด"</p>
+    <textarea class="field" id="bulk" style="min-height:200px" placeholder="กะเพราหมูสับ | ผัด&#10;ต้มยำกุ้ง | ต้ม&#10;ข้าวผัดปู"></textarea>
+    <p class="hint">เมนูที่ชื่อซ้ำกับที่มีอยู่แล้วจะถูกข้าม</p>
+    <div class="actions">
+      <button type="submit" class="btn primary">เพิ่มทั้งหมด</button>
+      <button type="button" class="btn" id="cancelImport">ยกเลิก</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Settings -->
+<dialog id="settings">
+  <form class="sheet" id="settingsForm" method="dialog">
+    <h2>เชื่อมต่อ Google Sheet</h2>
+    <p class="sub">ใส่ลิงก์ Web app (ลงท้ายด้วย /exec) และรหัสที่ได้จากการรัน setup ใน Apps Script ตั้งค่าครั้งเดียวต่อเครื่อง</p>
+    <label for="s-url">ลิงก์ Web app</label>
+    <input class="field" id="s-url" type="url" required placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off">
+    <label for="s-key">รหัส (API key)</label>
+    <input class="field" id="s-key" required autocomplete="off" autocapitalize="off" spellcheck="false">
+    <p class="hint" id="s-msg"></p>
+    <div class="actions">
+      <button type="submit" class="btn primary" id="s-save">เชื่อมต่อ</button>
+      <button type="button" class="btn" id="s-cancel">ยกเลิก</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const CACHE_KEY = 'menu-app-cache-v1';
+  const CONF_KEY  = 'menu-app-conf-v1';
+  let menus = [];
+  let filterCat = 'ทั้งหมด';
+  let editingId = null;
+  let lastPick = null;
+  let conf = null;
+  let busy = false;
+
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const uid = () => 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2000); }
+  function status(msg){ $('#status').textContent=msg; }
+
+  /* ---------- local cache & config ---------- */
+  function lsGet(k){ try{ const r=localStorage.getItem(k); return r?JSON.parse(r):null; }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  function cache(){ lsSet(CACHE_KEY, menus); }
+
+  /* ---------- API ---------- */
+  async function api(action, payload){
+    if(!conf) throw new Error('no_conf');
+    let res;
+    if(action==='list'){
+      const u = conf.url + '?action=list&key=' + encodeURIComponent(conf.key) + '&t=' + Date.now();
+      res = await fetch(u, {redirect:'follow'});
+    } else {
+      // text/plain body = no CORS preflight, which Apps Script can't answer
+      res = await fetch(conf.url, {method:'POST', redirect:'follow', body: JSON.stringify({key:conf.key, action, ...payload})});
+    }
+    if(!res.ok) throw new Error('http_'+res.status);
+    const data = await res.json();
+    if(!data.ok) throw new Error(data.error||'error');
+    return data.menus;
+  }
+  function errText(e){
+    const m=String(e&&e.message||e);
+    if(m==='unauthorized') return 'รหัสไม่ถูกต้อง ตรวจสอบในหน้าตั้งค่า';
+    if(m==='no_conf') return 'ยังไม่ได้เชื่อมต่อ Google Sheet';
+    return 'เชื่อมต่อไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่';
+  }
+  function applyServer(list){
+    menus = list; cache(); render();
+    const t=new Date(); status('ซิงก์กับ Google Sheet แล้ว เวลา '+t.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}));
+  }
+  async function refresh(){
+    if(!conf){ status('ยังไม่ได้เชื่อมต่อ กด "ตั้งค่า" เพื่อเริ่ม'); return; }
+    status('กำลังโหลด…');
+    try{ applyServer(await api('list')); }
+    catch(e){ status(errText(e) + (menus.length?' (แสดงข้อมูลล่าสุดที่เก็บไว้)':'')); }
+  }
+  async function write(action, payload, okMsg){
+    if(!conf){ toast('ยังไม่ได้เชื่อมต่อ Google Sheet'); openSettings(); return false; }
+    busy=true; status('กำลังบันทึก…');
+    try{ applyServer(await api(action, payload)); toast(okMsg); return true; }
+    catch(e){ toast(errText(e)); await refresh(); return false; }
+    finally{ busy=false; }
+  }
+
+  /* ---------- render ---------- */
+  function cats(){ const s=new Set(menus.map(m=>m.cat).filter(Boolean)); return ['ทั้งหมด',...[...s].sort((a,b)=>a.localeCompare(b,'th'))]; }
+  function filtered(){
+    const q=$('#q').value.trim().toLowerCase();
+    return menus.filter(m=>{
+      if (filterCat!=='ทั้งหมด' && m.cat!==filterCat) return false;
+      if (!q) return true;
+      return (m.name+' '+(m.ing||'')+' '+(m.cat||'')+' '+(m.note||'')).toLowerCase().includes(q);
+    }).sort((a,b)=>a.name.localeCompare(b.name,'th'));
+  }
+  function render(){
+    const cs=cats(); if(!cs.includes(filterCat)) filterCat='ทั้งหมด';
+    $('#chips').innerHTML = cs.map(c=>`<button class="chip" aria-pressed="${c===filterCat}" data-cat="${esc(c)}">${esc(c)}</button>`).join('');
+    $('#catList').innerHTML = cs.slice(1).map(c=>`<option value="${esc(c)}">`).join('');
+    const list=filtered();
+    $('#list').innerHTML = list.map(m=>`<li><button class="item" data-id="${esc(m.id)}"><span class="dot"></span><span class="t"><span class="n">${esc(m.name)}</span><span class="c">${esc(m.cat||'ไม่มีหมวด')}</span></span>${m.steps?'<span class="has">มีสูตร</span>':''}</button></li>`).join('');
+    $('#empty').hidden = menus.length>0;
+    $('#count').textContent = menus.length ? `${list.length} จาก ${menus.length} เมนู` : '';
+    $('#spinLabel').textContent = filterCat==='ทั้งหมด' ? 'วันนี้กินอะไรดี' : `สุ่มจากหมวด ${filterCat}`;
+  }
+
+  /* ---------- detail ---------- */
+  function openDetail(id){
+    const m=menus.find(x=>x.id===id); if(!m) return;
+    const block=(t,v)=> v?`<h3>${t}</h3><p class="body">${esc(v)}</p>`:'';
+    $('#detailBody').innerHTML = `
+      <h2>${esc(m.name)}</h2>
+      <p class="sub">${esc(m.cat||'ไม่มีหมวด')}</p>
+      ${block('วัตถุดิบ',m.ing)}${block('วิธีทำ',m.steps)}${block('โน้ต',m.note)}
+      ${!m.ing&&!m.steps&&!m.note?'<p class="hint">ยังไม่มีรายละเอียด กด "แก้ไข" เพื่อเพิ่มวัตถุดิบและวิธีทำ</p>':''}
+      <div class="actions">
+        <button class="btn primary" data-act="edit">แก้ไข</button>
+        <button class="btn" data-act="close">ปิด</button>
+        <button class="btn danger" data-act="del">ลบ</button>
+      </div>`;
+    $('#detailBody').dataset.id=id;
+    $('#detail').showModal();
+  }
+  $('#detailBody').addEventListener('click',e=>{
+    const a=e.target.closest('[data-act]')?.dataset.act; const id=$('#detailBody').dataset.id;
+    if(a==='close') $('#detail').close();
+    if(a==='edit'){ $('#detail').close(); openEditor(id); }
+    if(a==='del'){ const m=menus.find(x=>x.id===id); if(m && confirm(`ลบเมนู "${m.name}" ใช่ไหม?`)){ $('#detail').close(); write('delete',{id},'ลบเมนูแล้ว'); } }
+  });
+
+  /* ---------- editor ---------- */
+  function openEditor(id){
+    editingId=id||null; const m=menus.find(x=>x.id===id)||{};
+    $('#formTitle').textContent = id?'แก้ไขเมนู':'เพิ่มเมนู';
+    $('#f-name').value=m.name||''; $('#f-cat').value=m.cat||'';
+    $('#f-ing').value=m.ing||''; $('#f-steps').value=m.steps||''; $('#f-note').value=m.note||'';
+    $('#editor').showModal(); setTimeout(()=>$('#f-name').focus(),50);
+  }
+  $('#form').addEventListener('submit',async e=>{
+    e.preventDefault(); if(busy) return;
+    const name=$('#f-name').value.trim(); if(!name) return;
+    const base = editingId ? menus.find(x=>x.id===editingId) : {id:uid(),created:Date.now()};
+    const menu = {...base,name,cat:$('#f-cat').value.trim(),ing:$('#f-ing').value.trim(),steps:$('#f-steps').value.trim(),note:$('#f-note').value.trim()};
+    $('#saveBtn').disabled=true;
+    const ok = await write('save',{menu}, editingId?'บันทึกการแก้ไขแล้ว':'เพิ่มเมนูแล้ว');
+    $('#saveBtn').disabled=false;
+    if(ok) $('#editor').close();
+  });
+  $('#cancelEdit').onclick=()=>$('#editor').close();
+
+  /* ---------- bulk import ---------- */
+  $('#importBtn').onclick=()=>{ $('#bulk').value=''; $('#importer').showModal(); };
+  $('#cancelImport').onclick=()=>$('#importer').close();
+  $('#importForm').addEventListener('submit',async e=>{
+    e.preventDefault(); if(busy) return;
+    const have=new Set(menus.map(m=>m.name.trim().toLowerCase()));
+    const added=[];
+    $('#bulk').value.split('\n').forEach(line=>{
+      const [n,c]=line.split('|').map(s=>(s||'').replace(/^[\s\-•*\d.)]+/,'').trim());
+      if(!n || have.has(n.toLowerCase())) return;
+      have.add(n.toLowerCase());
+      added.push({id:uid(),name:n.slice(0,120),cat:(c||'').slice(0,40),ing:'',steps:'',note:'',created:Date.now()});
+    });
+    $('#importer').close();
+    if(!added.length){ toast('ไม่มีเมนูใหม่ให้เพิ่ม'); return; }
+    write('saveMany',{menus:added},`เพิ่ม ${added.length} เมนูแล้ว`);
+  });
+
+  /* ---------- random ---------- */
+  $('#spinBtn').onclick=()=>{
+    const pool = filterCat==='ทั้งหมด'?menus:menus.filter(m=>m.cat===filterCat);
+    if(!pool.length){ toast('ยังไม่มีเมนูให้สุ่ม'); return; }
+    const pick=$('#pick'); const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const final=pool[Math.floor(Math.random()*pool.length)];
+    $('#openPick').hidden=true;
+    if(reduce||pool.length===1){ pick.textContent=final.name; lastPick=final.id; $('#openPick').hidden=false; return; }
+    pick.classList.add('rolling'); let n=0;
+    const iv=setInterval(()=>{ pick.textContent=pool[Math.floor(Math.random()*pool.length)].name; if(++n>14){ clearInterval(iv); pick.classList.remove('rolling'); pick.textContent=final.name; lastPick=final.id; $('#openPick').hidden=false; } },70);
+  };
+  $('#openPick').onclick=()=>lastPick&&openDetail(lastPick);
+
+  /* ---------- settings ---------- */
+  function openSettings(){
+    $('#s-url').value=conf?.url||''; $('#s-key').value=conf?.key||''; $('#s-msg').textContent='';
+    $('#settings').showModal();
+  }
+  $('#settingsBtn').onclick=openSettings;
+  $('#s-cancel').onclick=()=>$('#settings').close();
+  $('#settingsForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const url=$('#s-url').value.trim(), key=$('#s-key').value.trim();
+    if(!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)){ $('#s-msg').textContent='ลิงก์ต้องขึ้นต้นด้วย https://script.google.com/ และลงท้ายด้วย /exec'; return; }
+    const prev=conf; conf={url,key};
+    $('#s-save').disabled=true; $('#s-msg').textContent='กำลังทดสอบการเชื่อมต่อ…';
+    try{ const list=await api('list'); lsSet(CONF_KEY,conf); applyServer(list); $('#settings').close(); toast('เชื่อมต่อสำเร็จ'); }
+    catch(err){ conf=prev; $('#s-msg').textContent=errText(err); }
+    finally{ $('#s-save').disabled=false; }
+  });
+
+  /* ---------- events ---------- */
+  $('#addBtn').onclick=()=>openEditor(null);
+  $('#refreshBtn').onclick=refresh;
+  $('#q').addEventListener('input',render);
+  $('#chips').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return; filterCat=b.dataset.cat; render(); });
+  $('#list').addEventListener('click',e=>{ const b=e.target.closest('.item'); if(b) openDetail(b.dataset.id); });
+  document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{ if(e.target===d) d.close(); }));
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && !busy && !document.querySelector('dialog[open]')) refresh(); });
+
+  /* ---------- boot ---------- */
+  menus = lsGet(CACHE_KEY) || [];
+  conf  = lsGet(CONF_KEY);
+  render();
+  if(!conf){ status('ยังไม่ได้เชื่อมต่อ กด "ตั้งค่า" เพื่อเริ่ม'); openSettings(); }
+  else refresh();
+})();
+</script>
+</body>
+</html>
