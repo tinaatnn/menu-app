@@ -1,6 +1,6 @@
 {
-  "name": "สมุดเมนูของฉัน",
-  "short_name": "เมนูของฉัน",
+  "name": "Tina's Recipe",
+  "short_name": "Tina's Recipe",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
